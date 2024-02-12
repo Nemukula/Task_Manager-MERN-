@@ -4,8 +4,11 @@ import Header from './modules/Header';
 import Tasks from './modules/Tasks';
 import axios from 'axios';
 
+var global_data = [];
+
 function App() {
 
+  //////Fecting data from backend,  node.js <- Mongodb
   useEffect(() => {
     const fetchData = async () => {
         try {
@@ -14,52 +17,34 @@ function App() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(data);
-            // values = data
+            global_data = data;
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
- 
     fetchData();
 }, []);
 
-  const [AA, setTasks] = useState ([{
-    id:'01',
-    text:'Food shopping',
-    day:'feb 6th at 12:00'
-},
-{
-    id:'02',
-    text:'Eating Lurch',
-    day:'feb 6th at 14:00'
+/////Initial state to be used when app is opened
+const [AA, setTasks] = useState (global_data);
 
-},
-{
-    id:'03',
-    text:'Doing Landury',
-    day:'feb 8th at 8:00'
 
-}]
-)
+///////////ADDING NEW TASK FUNCTION///////////////////////
 function handleAddTask()  {
     var input = document.getElementById('inputs');
-  
     let newId = Math.max(...AA.map(task => task.id), 0) + 1;
     let day = new Date().toLocaleDateString();
-    let date = new Date();
-    day = day;
     let tesk = input.value;
     let BB = [...AA, {id:`${newId}`, text: tesk, day: `${day}`}];
     setTasks([...BB]);
-  
-    //setTasks(BB);
   }
 
+  //////////////DELETING TASK FUNCTION///////////////////////
 function DeleteTask(my_input) {
   setTasks(AA.filter((el)=> el.id !== my_input))
 }
 
+////////////////SENDING DATA FROM REACT TO BACKEND(node.js -> mongodb)
 function sending() {
     const dataToSend = {
       key: 'value',
@@ -76,13 +61,11 @@ function sending() {
       });
 }
 
-const tt = 'Time'
-
   return (
     <div className="App">
       <Header title='TASK MANAGER' onAdding={handleAddTask}/><br />
-      <Tasks  title= {AA}  onDelete = {DeleteTask}/>
-      <button onClick={sending}>Addding</button>
+      <Tasks  title= {global_data}  onDelete = {DeleteTask}/>
+      <button onClick={sending}>Save</button>
       </div>
   );
 }
