@@ -45,16 +45,16 @@ function DeleteTask(my_input) {
 }
 
 ////////////////SENDING DATA FROM REACT TO BACKEND(node.js -> mongodb)
-function sending() {
+function sending(event) {
     const dataToSend = {
       key: 'value',
       anotherKey: 'anotherValue'
     };
 
-    axios.get('/formFront', dataToSend)
+    event.preventDefault();
+    axios.post('http://localhost:5051/fromFront', {dataToSend})
       .then(response => {
-        console.log(response.data);
-        response.send(dataToSend)
+        console.log(response.data)
       })
       .catch(error => {
         console.error('Error sending data:', error);
