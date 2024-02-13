@@ -9,6 +9,8 @@ const app = express();
 
 app.use(cors())
 
+var a = 1;
+
 app.use(bodyParser.json());
 
 app.get( '/fromFront', (req, res) => {
